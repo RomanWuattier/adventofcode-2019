@@ -10,7 +10,6 @@ DIRECTIONS = {
 
 
 def build_wire_segment(wire_segment):
-    pos_dist = {}
     pos = [0, 0]
     dist = 0
     for segment in wire_segment:
@@ -23,22 +22,25 @@ def build_wire_segment(wire_segment):
         for _ in range(0, int(length)):
             pos[coord] += mvt
             dist += 1
-            pos_dist[tuple(pos)] = dist
+            yield tuple(pos), dist
 
-    return pos_dist
+
+intersection = {}
 
 
 def intersect(wire1, wire2):
-    s1 = build_wire_segment(wire1)
-    s2 = build_wire_segment(wire2)
-    intersections = s1.keys() & s2.keys()
-    dists = [(s1.get(i), s2.get(i)) for i in intersections]
-    return intersections, dists
+    pos_dist = {}
+    for p, d in build_wire_segment(wire1):
+        pos_dist[p] = d
+
+    for p, d in build_wire_segment(wire2):
+        if p in pos_dist:
+            intersection[p] = pos_dist[p] + d
 
 
 if __name__ == '__main__':
     with open(sys.argv[1]) as input:
         wire1, wire2 = [l.split(',') for l in input.readlines()]
-        inters = intersect(wire1, wire2)
-        print(min([abs(x) + abs(y) for (x, y) in inters[0]]))
-        print(min([x + y for (x, y) in inters[1]]))
+        intersect(wire1, wire2)
+        print(min([abs(x) + abs(y) for x, y in intersection]))
+        print(min([d for _, d in intersection.items()]))
