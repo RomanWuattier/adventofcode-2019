@@ -1,16 +1,14 @@
-import sys
-
-
-VALID_OPS = {
+OPS = {
     1: { 'params': 3, 'type': '+' }, 
-    2: { 'params': 3, 'type': '*' }, 
+    2: { 'params': 3, 'type': '*' },
+    3: { 'params': 1, 'type': 'input' },
+    4: { 'params': 1, 'type': 'output' },
     99: { 'params': 0, 'type': 'halt' }
 }
 
 
-def intcode(codes, noun, verb):
-    codes[1] = noun
-    codes[2] = verb
+def internal_intcode(valid_ops, codes):
+    VALID_OPS = {op: OPS.get(op) for op in valid_ops}
 
     slow_pointer = 0
     opcode = codes[slow_pointer]
@@ -34,16 +32,9 @@ def intcode(codes, noun, verb):
         opcode = codes[slow_pointer]
 
     return codes[0]
-    
 
-if __name__ == '__main__':
-    with open(sys.argv[1]) as input:
-        codes = [int(l) for l in input.read().split(',')]
-        # Part 1
-        print(intcode(codes.copy(), 12, 2))
-        # Part 2
-        for noun in range(0, 99):
-            for verb in range(0, 99):
-                if intcode(codes.copy(), noun, verb) == 19690720:
-                    print(100 * noun + verb)
-                    break
+
+def intcode(codes, noun, verb):
+    codes[1] = noun
+    codes[2] = verb
+    return internal_intcode([1, 2, 99], codes)
