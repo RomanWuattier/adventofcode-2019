@@ -1,11 +1,15 @@
 import sys
 
 
-# TODO: memoization
-def depth(orbit, vertex, d):
+def depth(orbit, vertex, d, cache):
+    if vertex in  cache:
+        return cache[vertex]
+
     if vertex in orbit.keys():
-        d += 1
-        return depth(orbit, orbit[vertex], d)
+        d += depth(orbit, orbit[vertex], d, cache)
+        cache[vertex] = d
+        return d
+
     return d
 
 
@@ -31,7 +35,8 @@ if __name__ == '__main__':
         for (a, b) in lines:
             orbit[b] = a
 
-        print(sum(depth(orbit, vertex, 1) for _, vertex in orbit.items()))
+        cache = {}
+        print(sum(depth(orbit, vertex, 1, cache) for _, vertex in orbit.items()))
 
         # Part 2
         graph = {}
