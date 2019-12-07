@@ -6,5 +6,6 @@ puzzle_input = [3,225,1,225,6,6,1100,1,238,225,104,0,1102,57,23,224,101,-1311,22
 
 if __name__ == '__main__':
     # Part 1: input 1
+    print(intcode_day5(puzzle_input.copy(), 1))
     # Part 2: input 5
-    print(intcode_day5(puzzle_input.copy()))
+    print(intcode_day5(puzzle_input.copy(), 5))

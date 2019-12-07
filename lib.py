@@ -1,5 +1,4 @@
 import sys
-import re
 
 
 OPS = {
@@ -15,7 +14,7 @@ OPS = {
 }
 
 
-def internal_intcode(valid_ops, codes):
+def internal_intcode(valid_ops, codes, instructions = []):
     VALID_OPS = {op: OPS.get(op) for op in valid_ops}
 
     output = [None]
@@ -24,10 +23,9 @@ def internal_intcode(valid_ops, codes):
     while slow_pointer < len(codes):
         intcode = codes[slow_pointer]
         opcode = intcode % 100
-        
+
         if opcode not in VALID_OPS:
             print('Invalid opcode: ' + str(opcode))
-            break
 
         op = VALID_OPS.get(opcode)
         if op.get('type') == 'halt':
@@ -54,7 +52,11 @@ def internal_intcode(valid_ops, codes):
         elif op.get('type') == '*':
             codes[params[-1]] = values[0] * values[1]
         elif op.get('type') == 'input':
-            codes[params[-1]] = int(input("Input as integer: "))
+            if len(instructions) > 0:
+                codes[params[-1]] = instructions.pop(0)
+            else:
+                print('phase_setting is None')
+                break
         elif op.get('type') == 'output':
             output.append(values[-1])
         elif op.get('type') == '<':
@@ -77,5 +79,13 @@ def intcode(codes, noun, verb):
     return internal_intcode([1, 2, 99], codes)[0]
 
 
-def intcode_day5(codes):
-    return internal_intcode([1, 2, 3, 4, 5, 6, 7, 8, 99], codes)[1]
+def intcode_day5(codes, phase_setting):
+    return internal_intcode([1, 2, 3, 4, 5, 6, 7, 8, 99], codes, [phase_setting])[1]
+
+
+def intcode_day7(codes, phase_settings):
+    count = 0
+    for setting in phase_settings:
+        count = internal_intcode([1, 2, 3, 4, 5, 6, 7, 8, 99], codes, [setting, count])[1]
+
+    return count
