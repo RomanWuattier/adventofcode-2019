@@ -39,9 +39,6 @@ class Intcode:
             intcode = self.codes[self.slow_pointer]
             opcode = intcode % 100
 
-            if opcode not in self.valid_ops:
-                print('Invalid opcode: ' + str(opcode))
-
             op = self.valid_ops.get(opcode)
             if op.get('type') == 'halt':
                 self.halt = True
@@ -84,6 +81,8 @@ class Intcode:
                 jump_to = values[1] if values[0] != 0 else 0
             elif op.get('type') == 'jump-zero':    
                 jump_to = values[1] if values[0] == 0 else 0
+            else:
+                print('Invalid opcode: ' + str(opcode))
 
             self.slow_pointer = jump_to if jump_to > 0 else fast_pointer
 

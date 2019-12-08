@@ -19,16 +19,15 @@ if __name__ == '__main__':
     # Part 2:
     res = []
     for phase in list(it.permutations([9,8,7,6,5])):
-        amps = { setting: Intcode(setting, [3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5], [1, 2, 3, 4, 5, 6, 7, 8, 99]) for setting in phase}
+        amps = [Intcode(id, puzzle_input, [1, 2, 3, 4, 5, 6, 7, 8, 99]) for id in range(0, 5)]
+        settings = [setting for setting in phase]
         signal = 0
 
-        print('new phase ---------------------->')
-
-        while not all(amp.halted() for amp in  amps.values()):
-            for setting, amp in amps.items():
-                print('amp Id: ' + str(amp.getId()) + ' --- signal: ' + str(signal))
-
+        while not all(amp.halted() for amp in  amps):
+            for amp in amps:
                 if not amp.halted():
-                    signal = amp.intcode([setting, signal])[1]
+                    instructions = list([settings.pop(), signal]) if len(settings) > 0 else [signal]
+                    signal = amp.intcode(instructions)[1]
+
                 res.append(signal)
     print(max(res))
