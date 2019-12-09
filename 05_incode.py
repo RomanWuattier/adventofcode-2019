@@ -9,9 +9,9 @@ if __name__ == '__main__':
     intcode = Intcode(0, puzzle_input, [1, 2, 3, 4, 5, 6, 7, 8, 99])
     res = 0
     while (not intcode.halted()):
-        res = intcode.intcode([1])[-1]
+        res = intcode.intcode([1])[1]
     print(res)
 
     # Part 2: input 5
     intcode = Intcode(0, puzzle_input, [1, 2, 3, 4, 5, 6, 7, 8, 99])
-    print(intcode.intcode([5])[-1])
+    print(intcode.intcode([5])[1])

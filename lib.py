@@ -9,6 +9,7 @@ class Intcode:
         6: { 'params': 2, 'type': 'jump-zero' },
         7: { 'params': 3, 'type': '<' },
         8: { 'params': 3, 'type': '=' },
+        9: { 'params': 1, 'type': 'adjust-relative-base' },
         99: { 'params': 0, 'type': 'halt' }
     }
 
@@ -22,6 +23,7 @@ class Intcode:
         self.output = [None]
         self.slow_pointer = 0
         self.phase = 0
+        self.relative_base = 0
 
 
     def getId(self):
@@ -30,6 +32,25 @@ class Intcode:
 
     def halted(self) :
         return self.halt
+
+
+    def write(self, out_addr, value):
+        if out_addr >= len(self.codes):
+            self.codes += [0] * (out_addr - len(self.codes) + 10)
+        self.codes[out_addr] = value
+
+
+    def read(self, addr):
+        return self.codes[addr] if addr < len(self.codes) else 0
+
+
+    def get_values(self, addr, mode):
+        if mode == 2:
+            return self.read(addr + self.relative_base)
+        elif mode == 1:
+            return addr
+        else:
+            return self.read(addr)
 
 
     def intcode(self, instructions = []):
@@ -49,24 +70,26 @@ class Intcode:
                 print('Fast pointer > len')
                 break
 
-            # To improve. The goal is to manage parameter mode. For example: [1,0,0,2] is interpreted as [0,1,0,0,0]
-            modes = [0 for i in range(0, 5)]
+            # To improve. The goal is to manage parameter mode. For example: [1,0,0,2] is interpreted as [0,1,0] => [param1, param2, out]
+            modes = [0 for i in range(0, op.get('params'))]
             tmp = list(reversed(list(str(intcode))[:-2]))
             for i in range(0, len(tmp)):
                 modes[i] = int(tmp[i])
 
-            params = [p for p in self.codes[self.slow_pointer + 1:fast_pointer]]
-            values = [param if mode == 1 else self.codes[param] for param, mode in list(zip(params, modes))]
+            params_addr = [p for p in self.codes[self.slow_pointer + 1:fast_pointer]]
+            out_addr = params_addr[-1] + self.relative_base if modes[-1] == 2 else params_addr[-1]
+
+            values = [self.get_values(addr, mode) for addr, mode in list(zip(params_addr, modes))]
 
             jump_to = 0
 
             if op.get('type') == '+':
-                self.codes[params[-1]] = values[0] + values[1]
+                self.write(out_addr, values[0] + values[1])
             elif op.get('type') == '*':
-                self.codes[params[-1]] = values[0] * values[1]
+                self.write(out_addr, values[0] * values[1])
             elif op.get('type') == 'input':
                 if len(instructions) > 0:
-                    self.codes[params[-1]] = instructions.pop(0)
+                    self.write(out_addr, instructions.pop(0))
                 else:
                     print('Input opcode unsupported')
                     self.stop = True
@@ -74,13 +97,15 @@ class Intcode:
                 self.stop = True
                 self.output.append(values[-1])
             elif op.get('type') == '<':
-                self.codes[params[-1]] = 1 if values[0] < values[1] else 0
+                self.write(out_addr, 1 if values[0] < values[1] else 0)
             elif op.get('type') == '=':
-                self.codes[params[-1]] = 1 if values[0] == values[1] else 0
+                self.write(out_addr, 1 if values[0] == values[1] else 0)
             elif op.get('type') == 'jump-non-zero':
                 jump_to = values[1] if values[0] != 0 else 0
-            elif op.get('type') == 'jump-zero':    
+            elif op.get('type') == 'jump-zero':
                 jump_to = values[1] if values[0] == 0 else 0
+            elif op.get('type') == 'adjust-relative-base':
+                self.relative_base += values[0]
             else:
                 print('Invalid opcode: ' + str(opcode))
 
