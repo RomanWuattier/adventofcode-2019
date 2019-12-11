@@ -1,5 +1,5 @@
 import sys
-from lib import Intcode
+from intcode import Intcode
 
 
 if __name__ == '__main__':
@@ -9,13 +9,13 @@ if __name__ == '__main__':
         codes[1] = 12
         codes[2] = 2
         intcode = Intcode(0, codes, [1, 2, 99])
-        print(intcode.intcode()[0])
+        print(intcode.run()[0])
         # Part 2
         for noun in range(0, 99):
             for verb in range(0, 99):
                 codes[1] = noun
                 codes[2] = verb
                 intcode = Intcode(0, codes, [1, 2, 99])
-                if intcode.intcode()[0] == 19690720:
+                if intcode.run()[0] == 19690720:
                     print(100 * noun + verb)
                     break

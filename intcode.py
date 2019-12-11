@@ -14,7 +14,7 @@ class Intcode:
     }
 
     
-    def __init__(self, id, codes, valid_ops):
+    def __init__(self, id, codes, valid_ops = OPS.keys()):
         self.id = id
         self.codes = codes.copy()
         self.valid_ops = {op: self.OPS.get(op) for op in valid_ops}
@@ -24,10 +24,6 @@ class Intcode:
         self.slow_pointer = 0
         self.phase = 0
         self.relative_base = 0
-
-
-    def getId(self):
-        return self.id
 
 
     def halted(self) :
@@ -53,7 +49,7 @@ class Intcode:
             return self.read(addr)
 
 
-    def intcode(self, instructions = []):
+    def run(self, instructions = []):
         self.stop = False
 
         while self.slow_pointer < len(self.codes) and not self.stop:
