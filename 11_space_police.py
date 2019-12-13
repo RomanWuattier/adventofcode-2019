@@ -25,11 +25,7 @@ def move(codes, is_origin_white = False):
 
     while not intcode.halted():
         inst = [1] if pos in white_pos else [0]
-
-        for _ in range(0, 2):
-            intcode.run(inst)
-
-        color, turn = intcode.output[-2:]
+        color, turn = intcode.run(2, inst).get_output()[-2:]
         
         visited.add(pos)
         if color == 1:

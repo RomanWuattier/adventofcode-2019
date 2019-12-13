@@ -12,7 +12,7 @@ if __name__ == '__main__':
         count = 0
         for setting in phase:
             intcode = Intcode(0, puzzle_input, [1, 2, 3, 4, 5, 6, 7, 8, 99])
-            count = intcode.run([setting, count])[1]
+            count = intcode.run(instructions=[setting, count]).get_last_output()
         res.append(count)
     print(max(res))
 
@@ -27,7 +27,7 @@ if __name__ == '__main__':
             for amp in amps:
                 if not amp.halted():
                     instructions = list([settings.pop(), signal]) if len(settings) > 0 else [signal]
-                    signal = amp.run(instructions)[1]
+                    signal = amp.run(instructions=instructions).get_last_output()
 
                 res.append(signal)
     print(max(res))

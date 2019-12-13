@@ -35,9 +35,7 @@ if __name__ == '__main__':
     intcode = Intcode(0, puzzle_input)
 
     while not intcode.halted():
-        for _ in range(0, 3):
-            intcode.run()
-        parse(intcode.output)
+        parse(intcode.run(times=3).get_output())
 
     # Part 1
     print(len(blocks))
@@ -48,7 +46,5 @@ if __name__ == '__main__':
 
     while not intcode.halted() or not len(blocks) == 0:
         inst = 1 if paddle_x < ball_x else -1 if paddle_x > ball_x else 0
-        for _ in range(0, 3):
-            intcode.run([inst])
-        parse(intcode.output)
+        parse(intcode.run(3, [inst]).get_output())
     print(score)

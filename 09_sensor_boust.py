@@ -7,8 +7,8 @@ puzzle_input = [1102,34463338,34463338,63,1007,63,34463338,63,1005,63,53,1102,3,
 if __name__ == '__main__':
     # Part 1
     intcode = Intcode(0, puzzle_input)
-    print(str(intcode.run([1])[1]))
+    print(str(intcode.run(instructions=[1]).get_last_output()))
 
     # Part 1
     intcode = Intcode(0, puzzle_input)
-    print(str(intcode.run([2])[1]))
+    print(str(intcode.run(instructions=[2]).get_last_output()))
