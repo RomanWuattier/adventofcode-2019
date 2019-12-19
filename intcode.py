@@ -14,16 +14,20 @@ class Intcode:
     }
 
     
-    def __init__(self, id, codes, valid_ops = OPS.keys()):
+    def __init__(self, id, codes, slow_pointer = 0, relative_base = 0, valid_ops = OPS.keys()):
         self.id = id
         self.codes = codes.copy()
         self.valid_ops = {op: self.OPS.get(op) for op in valid_ops}
         self.halt = False
         self.stop = False
         self.output = []
-        self.slow_pointer = 0
+        self.slow_pointer = slow_pointer
         self.phase = 0
-        self.relative_base = 0
+        self.relative_base = relative_base
+
+
+    def dup(self):
+        return Intcode(self.id, self.codes, self.slow_pointer, self.relative_base)
 
 
     def halted(self) :
