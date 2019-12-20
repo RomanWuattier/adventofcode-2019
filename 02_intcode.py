@@ -10,14 +10,14 @@ if __name__ == '__main__':
     # Part 1
     codes[1] = 12
     codes[2] = 2
-    intcode = Intcode(0, codes, [1, 2, 99])
+    intcode = Intcode(0, codes, valid_ops=[1, 2, 99])
     print(intcode.run().get_first_code())
     # Part 2
     for noun in range(0, 99):
         for verb in range(0, 99):
             codes[1] = noun
             codes[2] = verb
-            intcode = Intcode(0, codes, [1, 2, 99])
+            intcode = Intcode(0, codes, valid_ops=[1, 2, 99])
             if intcode.run().get_first_code() == 19690720:
                 print(100 * noun + verb)
                 break

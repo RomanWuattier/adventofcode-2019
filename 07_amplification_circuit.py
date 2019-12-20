@@ -11,7 +11,7 @@ if __name__ == '__main__':
     for phase in list(it.permutations([0,1,2,3,4])):
         count = 0
         for setting in phase:
-            intcode = Intcode(0, puzzle_input, [1, 2, 3, 4, 5, 6, 7, 8, 99])
+            intcode = Intcode(0, puzzle_input, valid_ops=[1, 2, 3, 4, 5, 6, 7, 8, 99])
             count = intcode.run(instructions=[setting, count]).get_last_output()
         res.append(count)
     print(max(res))
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     # Part 2:
     res = []
     for phase in list(it.permutations([9,8,7,6,5])):
-        amps = [Intcode(id, puzzle_input, [1, 2, 3, 4, 5, 6, 7, 8, 99]) for id in range(0, 5)]
+        amps = [Intcode(id, puzzle_input, valid_ops=[1, 2, 3, 4, 5, 6, 7, 8, 99]) for id in range(0, 5)]
         settings = [setting for setting in phase]
         signal = 0
 

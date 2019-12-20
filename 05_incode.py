@@ -6,11 +6,11 @@ puzzle_input = [3,225,1,225,6,6,1100,1,238,225,104,0,1102,57,23,224,101,-1311,22
 
 if __name__ == '__main__':
     # Part 1: input 1
-    intcode = Intcode(0, puzzle_input, [1, 2, 3, 4, 5, 6, 7, 8, 99])
+    intcode = Intcode(0, puzzle_input, valid_ops=[1, 2, 3, 4, 5, 6, 7, 8, 99])
     while not intcode.halted():
         res = intcode.run(instructions=[1]).get_last_output()
     print(res)
 
     # Part 2: input 5
-    intcode = Intcode(0, puzzle_input, [1, 2, 3, 4, 5, 6, 7, 8, 99])
+    intcode = Intcode(0, puzzle_input, valid_ops=[1, 2, 3, 4, 5, 6, 7, 8, 99])
     print(intcode.run(instructions=[5]).get_last_output())
